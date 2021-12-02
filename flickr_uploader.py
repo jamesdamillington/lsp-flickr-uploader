@@ -18,10 +18,13 @@ def get_authorized_flickr_object_oob(opt):
         flickr.get_access_token(code)
     return flickr
 
-def upload(flickr, filename, is_public=False):
+def upload(flickr, opt):
     def b2i(b):
         return 1 if b else 0
-    rsp = flickr.upload(filename=filename, is_public=b2i(is_public))
+    rsp = flickr.upload(filename=opt.get('filename'), \
+            is_public=b2i(opt.get('public')), \
+            is_family=b2i(opt.get('family')), \
+            is_friend=b2i(opt.get('friend')))
     ElementTree.dump(rsp)
 
 if __name__ == '__main__':
@@ -35,8 +38,12 @@ if __name__ == '__main__':
     parser.add_argument('filename', help='filename of image to upload')
     parser.add_argument('-p', '--public', action='store_true',
             help='make uploaded image public')
+    parser.add_argument('-fa', '--family', action='store_true',
+            help='make uploaded image visible to your familgy')
+    parser.add_argument('-fr', '--friend', action='store_true',
+            help='make uploaded image visible to your friend')
     parser.add_argument('-s', '--client-secret', default='client_secret.json',
             help='specify Client-Secret JSON file, which stores API key and secret. defalt: client_secret.json')
     opt = parser.parse_args()
     flickr = get_authorized_flickr_object_oob(vars(opt))
-    upload(flickr, opt.filename, is_public=opt.public)
+    upload(flickr, vers(opt))

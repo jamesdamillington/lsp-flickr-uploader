@@ -7,7 +7,7 @@ This is minimal script which utilizes [FlickrAPI] to upload an image to Flickr.
 
 1. Please visit [The Flickr Developer Guide: API](https://www.flickr.com/services/developer/api/), and request API key for this script.
 1. Please create `client_secret.json`, which has format like `{ "key": "YOUR_KEY", "secret": "YOUR_SECRET" }` (please replace `YOUR_KEY` and `YOUR_SECRET` to actual value, you got in previous step).
-1. Please run this script and performs Authentication & Authorization.
+1. Please run this script without arguments, and perform Authentication & Authorization.
     1. This scripts shows URL for authorization process.
     1. Please visit the site and confirm authorization required for this script.
     1. Copy the *Verification Code* shown by Flickr and input it to this script.

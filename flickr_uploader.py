@@ -35,7 +35,8 @@ if __name__ == '__main__':
     import flickrapi
     flickrapi.set_log_level(logging.DEBUG)
     parser = ArgumentParser(description='Script to upload an image to Flickr.')
-    parser.add_argument('filename', help='filename of image to upload')
+    parser.add_argument('filename', nargs='?', default=None,
+            help='filename of image to upload')
     parser.add_argument('-p', '--public', action='store_true',
             help='make uploaded image public')
     parser.add_argument('-fa', '--family', action='store_true',
@@ -46,4 +47,5 @@ if __name__ == '__main__':
             help='specify Client-Secret JSON file, which stores API key and secret. defalt: client_secret.json')
     opt = parser.parse_args()
     flickr = get_authorized_flickr_object_oob(vars(opt))
-    upload(flickr, vers(opt))
+    if opt.filename:
+        upload(flickr, vers(opt))

@@ -48,4 +48,4 @@ if __name__ == '__main__':
     opt = parser.parse_args()
     flickr = get_authorized_flickr_object_oob(vars(opt))
     if opt.filename:
-        upload(flickr, vers(opt))
+        upload(flickr, vars(opt))

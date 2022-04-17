@@ -4,7 +4,7 @@ This code will upload images and associated metadata (title, description, tags, 
 
 
 ## Credit
-See the repo licence. This code is developed on base code from []akige](https://github.com/aikige)'s [lickr-uploader](https://github.com/aikige/flickr-uploader) script. Original README for that script is below.
+See the repo licence. This code is developed on base code from [akige](https://github.com/aikige)'s [flickr-uploader](https://github.com/aikige/flickr-uploader) script. Original README for that script is below.
 
 ### An sample python script for uploading image to Flickr
 [FlickrAPI]:https://github.com/sybrenstuvel/flickrapi/

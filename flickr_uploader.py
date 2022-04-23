@@ -37,6 +37,41 @@ def YesNoBin(b):
     return 1 if b == "Yes" else 0
 
 
+def get_confirm_token(response):
+    for key, value in response.cookies.items():
+        if key.startswith("download_warning"):
+            return value
+
+    return None
+
+
+def save_response_content(response, destination):
+    CHUNK_SIZE = 32768
+
+    with open(destination, "wb") as f:
+        for chunk in response.iter_content(CHUNK_SIZE):
+            if chunk:  # filter out keep-alive new chunks
+                f.write(chunk)
+
+
+def download_file_from_google_drive(id, destination):
+    # from https://stackoverflow.com/a/39225272
+    # this works assuming file is viewable to anyone on the web with link
+    # for private image try https://stackoverflow.com/a/38516081
+    URL = "https://docs.google.com/uc?export=download"
+
+    session = requests.Session()
+
+    response = session.get(URL, params={"id": id}, stream=True)
+    token = get_confirm_token(response)
+
+    if token:
+        params = {"id": id, "confirm": token}
+        response = session.get(URL, params=params, stream=True)
+
+    save_response_content(response, destination)
+
+
 def upload(flickr, rfilename):
 
     print(rfilename)
@@ -68,6 +103,10 @@ def upload(flickr, rfilename):
 
             # convert Yes|No to 1|0
             uk = YesNoBin(uk)
+
+            # next line from https://stackoverflow.com/a/6169363
+            image_id = image_url.split("=")[-1]
+            download_file_from_google_drive(image_id, "image_name.jpg")
 
             print(name)
             print(email)

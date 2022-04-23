@@ -4,6 +4,7 @@ from flickrapi import FlickrAPI
 from xml.etree import ElementTree
 import csv
 import requests  # for image download
+import os
 
 
 def get_authorized_flickr_object_oob(opt):
@@ -93,9 +94,11 @@ def upload(flickr, rfilename):
             year = lines[7]
             image_url = lines[8]
             tags_ot = lines[9]
-            description = lines[10]
+            descr_free = lines[10]
             lat = lines[11]
             lon = lines[12]
+
+            descr_credit = "Credit: ialeUK/" + name + " " + year
 
             # split multiple albums if necessary
             if "," in albums:
@@ -108,28 +111,26 @@ def upload(flickr, rfilename):
             image_id = image_url.split("=")[-1]
             download_file_from_google_drive(image_id, "image_name.jpg")
 
-            print(name)
-            print(email)
-            print(title)
-            print(albums)
-            print(tags_le)
-            print(uk)
-            print(year)
-            print(image_url)
-            print(tags_ot)
-            print(description)
-            print(lat)
-            print(lon)
+            print("Title: " + title)
+            print("Description: " + descr_credit)
+            # print(albums)
+            # print(tags_le)
+            # print(uk)
+            # print(image_url)
+            # print(tags_ot)
+            # print(descr_free)
+            # print(lat)
+            # print(lon)
 
-    """
-    def b2i(b):
-        return 1 if b else 0
-    rsp = flickr.upload(filename=opt.get('filename'),
-                        is_public=b2i(opt.get('public')),
-                        is_family=b2i(opt.get('family')),
-                        is_friend=b2i(opt.get('friend')))
-    ElementTree.dump(rsp)
-    """
+            rsp = flickr.upload(
+                filename="image_name.jpg", title=title, description=descr_credit
+            )
+            # is_public=b2i(opt.get('public')),
+            # is_family=b2i(opt.get('family')),
+            # is_friend=b2i(opt.get('friend')))
+            ElementTree.dump(rsp)
+
+            os.remove("image_name.jpg")
 
 
 if __name__ == "__main__":

@@ -33,9 +33,9 @@ def get_response_form_name(opt):
     return form_name
 
 
-def YesNoBin(b):
-    # convert Yes|No to 1|0
-    return 1 if b == "Yes" else 0
+def YesNoUK(b):
+    # convert Yes|No to 'UK'|'non-UK'
+    return 'UK' if b == "Yes" else 'non-UK'
 
 
 def get_confirm_token(response):
@@ -104,11 +104,8 @@ def upload(flickr, rfilename):
             if "," in albums:
                 albums = albums.split(", ")
 
-            # convert Yes|No to 1|0
-            uk = YesNoBin(uk)
-
             # ## TAGS ##
-            #create python list of tags
+            # create python list of tags
             tags_ot = tags_ot.split(",")
 
             # strip leading whitespace from any tags
@@ -120,9 +117,13 @@ def upload(flickr, rfilename):
                 if " " in item:
                     tags_ot[i] = f'"{item}"'
 
-            # collapse python comma sep list to space sep
+            # add UK/non-UK tag
+            tags_ot.append(YesNoUK(uk))
+
+            # collapse python comma sep list to space sep for upload
             tags_ot = " ".join(tags_ot)
 
+            # ## IMAGE ##
             # next line from https://stackoverflow.com/a/6169363
             image_id = image_url.split("=")[-1]
             download_file_from_google_drive(image_id, "image_name.jpg")
@@ -138,6 +139,7 @@ def upload(flickr, rfilename):
             # print(lat)
             # print(lon)
 
+            # ## UPLOAD ##
             rsp = flickr.upload(
                 filename="image_name.jpg",
                 title=title,

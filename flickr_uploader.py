@@ -73,27 +73,61 @@ def download_file_from_google_drive(id, destination):
     save_response_content(response, destination)
 
 
+def create_tags(tags_ot, uk, tags_le):
+
+    # ## other tags ##
+    # create python list of tags
+    tags_ot = tags_ot.split(",")
+
+    # strip leading whitespace from any tags
+    for i, item in enumerate(tags_ot):
+        tags_ot[i] = item.lstrip()
+
+    # put quotes around any tags containing spaces
+    for i, item in enumerate(tags_ot):
+        if " " in item:
+            tags_ot[i] = f'"{item}"'
+
+    # add UK/non-UK tag
+    tags_ot.append(YesNoUK(uk))
+
+    # ## lsp tags ##
+    # create python list of tags
+    tags_le = tags_le.split(",")
+
+    # get short tag from between [ ]
+    for i, item in enumerate(tags_le):
+        tags_le[i] = item.split("[")[-1].rstrip("]")
+
+    # ## all tags ##
+    tags_all = tags_le + tags_ot
+
+    # collapse python comma sep list to space sep for upload
+    tags_all = " ".join(tags_all)
+
+    return tags_all
+
+
 def upload(flickr, rfilename):
 
     print(rfilename)
 
     # opening the CSV file
     with open(rfilename, mode="r") as file:
-        # reading the CSV file
+
         csvFile = csv.reader(file)
-        next(file)
-        # displaying the contents of the CSV file
+        next(file)  # skip column headers
         for lines in csvFile:
             # print(lines)
             name = lines[1]
-            email = lines[2]
+            # email = lines[2]
             title = lines[3]
             albums = lines[4]
-            tags_le = lines[5]
-            uk = lines[6]
+            # tags_le = lines[5]
+            # uk = lines[6]
             year = lines[7]
             image_url = lines[8]
-            tags_ot = lines[9]
+            # tags_ot = lines[9]
             descr_free = lines[10]
             lat = lines[11]
             lon = lines[12]
@@ -104,36 +138,7 @@ def upload(flickr, rfilename):
             if "," in albums:
                 albums = albums.split(", ")
 
-            # ## TAGS ##
-            # ## other tags ##
-            # create python list of tags
-            tags_ot = tags_ot.split(",")
-
-            # strip leading whitespace from any tags
-            for i, item in enumerate(tags_ot):
-                tags_ot[i] = item.lstrip()
-
-            # put quotes around any tags containing spaces
-            for i, item in enumerate(tags_ot):
-                if " " in item:
-                    tags_ot[i] = f'"{item}"'
-
-            # add UK/non-UK tag
-            tags_ot.append(YesNoUK(uk))
-
-            # ## lsp tags ##
-            # create python list of tags
-            tags_le = tags_le.split(",")
-
-            # get short tag from between [ ]
-            for i, item in enumerate(tags_le):
-                tags_le[i] = item.split("[")[-1].rstrip("]")
-
-            # ## all tags ##
-            tags_all = tags_le + tags_ot
-
-            # collapse python comma sep list to space sep for upload
-            tags_all = " ".join(tags_all)
+            tags_all = create_tags(lines[9], lines[6], lines[5])
 
             # ## IMAGE ##
             # next line from https://stackoverflow.com/a/6169363
@@ -158,6 +163,11 @@ def upload(flickr, rfilename):
                 description=descr_credit,
                 tags=tags_all,
             )
+
+            # see https://docs.python.org/3/library/xml.etree.elementtree.html
+            photoid = rsp[0].text
+            print("PhotoID: " + photoid)
+
             ElementTree.dump(rsp)
 
             os.remove("image_name.jpg")

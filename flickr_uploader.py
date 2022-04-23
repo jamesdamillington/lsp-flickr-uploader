@@ -107,6 +107,22 @@ def upload(flickr, rfilename):
             # convert Yes|No to 1|0
             uk = YesNoBin(uk)
 
+            # ## TAGS ##
+            #create python list of tags
+            tags_ot = tags_ot.split(",")
+
+            # strip leading whitespace from any tags
+            for i, item in enumerate(tags_ot):
+                tags_ot[i] = item.lstrip()
+
+            # put quotes around any tags containing spaces
+            for i, item in enumerate(tags_ot):
+                if " " in item:
+                    tags_ot[i] = f'"{item}"'
+
+            # collapse python comma sep list to space sep
+            tags_ot = " ".join(tags_ot)
+
             # next line from https://stackoverflow.com/a/6169363
             image_id = image_url.split("=")[-1]
             download_file_from_google_drive(image_id, "image_name.jpg")
@@ -117,17 +133,17 @@ def upload(flickr, rfilename):
             # print(tags_le)
             # print(uk)
             # print(image_url)
-            # print(tags_ot)
+            print("Tags: " + tags_ot)
             # print(descr_free)
             # print(lat)
             # print(lon)
 
             rsp = flickr.upload(
-                filename="image_name.jpg", title=title, description=descr_credit
+                filename="image_name.jpg",
+                title=title,
+                description=descr_credit,
+                tags=tags_ot,
             )
-            # is_public=b2i(opt.get('public')),
-            # is_family=b2i(opt.get('family')),
-            # is_friend=b2i(opt.get('friend')))
             ElementTree.dump(rsp)
 
             os.remove("image_name.jpg")

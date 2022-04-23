@@ -131,4 +131,4 @@ dmypy.json
 # Project Specific
 client_secret.json
 *.csv
-
+*.jpg

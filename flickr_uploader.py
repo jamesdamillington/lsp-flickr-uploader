@@ -35,7 +35,7 @@ def get_response_form_name(opt):
 
 def YesNoUK(b):
     # convert Yes|No to 'UK'|'non-UK'
-    return 'UK' if b == "Yes" else 'non-UK'
+    return "UK" if b == "Yes" else "non-UK"
 
 
 def get_confirm_token(response):
@@ -105,6 +105,7 @@ def upload(flickr, rfilename):
                 albums = albums.split(", ")
 
             # ## TAGS ##
+            # ## other tags ##
             # create python list of tags
             tags_ot = tags_ot.split(",")
 
@@ -120,8 +121,19 @@ def upload(flickr, rfilename):
             # add UK/non-UK tag
             tags_ot.append(YesNoUK(uk))
 
+            # ## lsp tags ##
+            # create python list of tags
+            tags_le = tags_le.split(",")
+
+            # get short tag from between [ ]
+            for i, item in enumerate(tags_le):
+                tags_le[i] = item.split("[")[-1].rstrip("]")
+
+            # ## all tags ##
+            tags_all = tags_le + tags_ot
+
             # collapse python comma sep list to space sep for upload
-            tags_ot = " ".join(tags_ot)
+            tags_all = " ".join(tags_all)
 
             # ## IMAGE ##
             # next line from https://stackoverflow.com/a/6169363
@@ -134,7 +146,7 @@ def upload(flickr, rfilename):
             # print(tags_le)
             # print(uk)
             # print(image_url)
-            print("Tags: " + tags_ot)
+            print("Tags: " + tags_all)
             # print(descr_free)
             # print(lat)
             # print(lon)
@@ -144,7 +156,7 @@ def upload(flickr, rfilename):
                 filename="image_name.jpg",
                 title=title,
                 description=descr_credit,
-                tags=tags_ot,
+                tags=tags_all,
             )
             ElementTree.dump(rsp)
 

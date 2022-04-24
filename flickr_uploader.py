@@ -141,8 +141,12 @@ def upload(flickr, rfilename, album_ids):
             lat = lines[11]
             lon = lines[12]
 
-            descr_credit = "Credit: ialeUK/" + name + " " + year
+            print("Title: " + title)
 
+            descr_all = "Credit: ialeUK/" + name + " " + year + "\n\n" + descr_free
+            print("Description: " + descr_all)
+
+            print("Albums: " + albums)
             # always split (if only one album it will have trailing comma)
             albums = albums.split(", ")
 
@@ -151,28 +155,18 @@ def upload(flickr, rfilename, album_ids):
                 albums[a] = album_ids[item]
 
             tags_all = create_tags(lines[9], lines[6], lines[5])
+            print("Tags: " + tags_all)
 
             # ## IMAGE ##
             # next line from https://stackoverflow.com/a/6169363
             image_id = image_url.split("=")[-1]
             download_file_from_google_drive(image_id, "image_name.jpg")
 
-            print("Title: " + title)
-            print("Description: " + descr_credit)
-            print("Albums: " + albums)
-            # print(tags_le)
-            # print(uk)
-            # print(image_url)
-            print("Tags: " + tags_all)
-            # print(descr_free)
-            # print(lat)
-            # print(lon)
-
             # ## UPLOAD ##
             rsp = flickr.upload(
                 filename="image_name.jpg",
                 title=title,
-                description=descr_credit,
+                description=descr_all,
                 tags=tags_all,
             )
 

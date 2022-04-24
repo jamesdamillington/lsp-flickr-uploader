@@ -173,10 +173,18 @@ def upload(flickr, rfilename, album_ids):
             # ## ADD TO ALBUM(S) ##
             # see https://docs.python.org/3/library/xml.etree.elementtree.html
             photoid = rsp[0].text
-            print("PhotoID: " + photoid)
+            # print("PhotoID: " + photoid)
 
             for id in albums:
                 flickr.photosets_addPhoto(photoset_id=id, photo_id=photoid)
+
+            # ## ADD LOCATION ##
+            if lat.strip():
+                if lon.strip():
+                    print("Lat:" + lat + " Lon:" + lon)
+                    flickr.photos.geo.setLocation(
+                        photo_id=photoid, lat=float(lat), lon=float(lon)
+                    )
 
             # ## CLEAN UP ##
             ElementTree.dump(rsp)

@@ -33,6 +33,15 @@ def get_response_form_name(opt):
     return form_name
 
 
+def get_album_ids(opt):
+    albums_dict = None
+    filename = opt.get("client_secret")
+    with open(filename) as f:
+        keys = json.load(f)
+    albums_dict = keys["album_ids"]
+    return albums_dict
+
+
 def YesNoUK(b):
     # convert Yes|No to 'UK'|'non-UK'
     return "UK" if b == "Yes" else "non-UK"
@@ -108,7 +117,7 @@ def create_tags(tags_ot, uk, tags_le):
     return tags_all
 
 
-def upload(flickr, rfilename):
+def upload(flickr, rfilename, album_ids):
 
     print(rfilename)
 
@@ -134,9 +143,12 @@ def upload(flickr, rfilename):
 
             descr_credit = "Credit: ialeUK/" + name + " " + year
 
-            # split multiple albums if necessary
-            if "," in albums:
-                albums = albums.split(", ")
+            # always split (if only one album it will have trailing comma)
+            albums = albums.split(", ")
+
+            # recode album names to album ids
+            for a, item in enumerate(albums):
+                albums[a] = album_ids[item]
 
             tags_all = create_tags(lines[9], lines[6], lines[5])
 
@@ -147,7 +159,7 @@ def upload(flickr, rfilename):
 
             print("Title: " + title)
             print("Description: " + descr_credit)
-            # print(albums)
+            print("Albums: " + albums)
             # print(tags_le)
             # print(uk)
             # print(image_url)
@@ -164,10 +176,15 @@ def upload(flickr, rfilename):
                 tags=tags_all,
             )
 
+            # ## ADD TO ALBUM(S) ##
             # see https://docs.python.org/3/library/xml.etree.elementtree.html
             photoid = rsp[0].text
             print("PhotoID: " + photoid)
 
+            for id in albums:
+                flickr.photosets_addPhoto(photoset_id=id, photo_id=photoid)
+
+            # ## CLEAN UP ##
             ElementTree.dump(rsp)
 
             os.remove("image_name.jpg")
@@ -203,5 +220,6 @@ if __name__ == "__main__":
     opt = parser.parse_args()
     flickr = get_authorized_flickr_object_oob(vars(opt))
     responses_filename = get_response_form_name(vars(opt))
+    album_ids = get_album_ids(vars(opt))
     # if opt.filename:
-    upload(flickr, responses_filename)
+    upload(flickr, responses_filename, album_ids)

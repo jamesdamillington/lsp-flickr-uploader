@@ -132,3 +132,4 @@ dmypy.json
 client_secret.json
 *.csv
 *.jpg
+*.xlsx

@@ -131,11 +131,11 @@ def upload(flickr, rfilename, album_ids):
             name = lines[1]
             # email = lines[2]
             title = lines[3]
-            albums = lines[4]
+            albums = lines[6]
             # tags_le = lines[5]
             # uk = lines[6]
-            year = lines[7]
-            image_url = lines[8]
+            year = lines[5]
+            image_url = lines[7]
             # tags_ot = lines[9]
             descr_free = lines[10]
             lat = lines[11]
@@ -154,7 +154,7 @@ def upload(flickr, rfilename, album_ids):
             for a, item in enumerate(albums):
                 albums[a] = album_ids[item]
 
-            tags_all = create_tags(lines[9], lines[6], lines[5])
+            tags_all = create_tags(lines[8], lines[4], lines[9])
             print("Tags: " + tags_all)
 
             # ## IMAGE ##

@@ -119,8 +119,6 @@ def create_tags(tags_ot, uk, tags_le):
 
 def upload(flickr, rfilename, album_ids):
 
-    print(rfilename)
-
     # opening the CSV file
     with open(rfilename, mode="r") as file:
 
@@ -214,14 +212,30 @@ if __name__ == "__main__":
     """
     parser.add_argument(
         "-s",
-        "--client-secret",
+        "--client_secret",
         default="client_secret.json",
-        help="specify Client-Secret JSON file, which stores \
-                        API key and secret. defalt: client_secret.json",
+        help="specify Client_Secret JSON file, which stores \
+                        API key and secret. default: client_secret.json",
+    )
+
+    parser.add_argument(
+        "-r",
+        "--responses_filename",
+        default=1,
+        help="specify filename of responses spreadsheet. If not specified, \
+                    filename will be taken from 'responses' in Client_Secret \
+                    JSON",
     )
     opt = parser.parse_args()
+
     flickr = get_authorized_flickr_object_oob(vars(opt))
-    responses_filename = get_response_form_name(vars(opt))
+    if opt.responses_filename == 1:
+        responses_filename = get_response_form_name(vars(opt))
+    else:
+        responses_filename = opt.responses_filename
+
+    print("\nUsing responses from: " + responses_filename + "\n")
+
     album_ids = get_album_ids(vars(opt))
     # if opt.filename:
     upload(flickr, responses_filename, album_ids)

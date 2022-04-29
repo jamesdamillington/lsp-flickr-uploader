@@ -123,7 +123,7 @@ def upload(flickr, rfilename, album_ids):
     with open(rfilename, mode="r") as file:
 
         csvFile = csv.reader(file)
-        next(file)  # skip column headers
+        next(file)  # skip column header line
         for lines in csvFile:
             # print(lines)
             name = lines[1]
@@ -133,7 +133,7 @@ def upload(flickr, rfilename, album_ids):
             # tags_le = lines[5]
             # uk = lines[6]
             year = lines[5]
-            image_url = lines[7]
+            image_loc = lines[7]
             # tags_ot = lines[9]
             descr_free = lines[10]
             lat = lines[11]
@@ -156,22 +156,24 @@ def upload(flickr, rfilename, album_ids):
             print("Tags: " + tags_all)
 
             # ## IMAGE ##
-            # next line from https://stackoverflow.com/a/6169363
-            image_id = image_url.split("=")[-1]
-            download_file_from_google_drive(image_id, "image_name.jpg")
+            # if image is to be accessed from GDrive (e.g. vai GForm )
+            if "https://drive.google.com/open?" in image_loc:
+                image_name = "image_name.jpg"
+                # next line from https://stackoverflow.com/a/6169363
+                image_id = image_loc.split("=")[-1]
+                download_file_from_google_drive(image_id, image_name)
+            # else image is to be accessed direct from filename
+            else:
+                image_name = image_loc
 
             # ## UPLOAD ##
             rsp = flickr.upload(
-                filename="image_name.jpg",
-                title=title,
-                description=descr_all,
-                tags=tags_all,
+                filename=image_name, title=title, description=descr_all, tags=tags_all,
             )
 
             # ## ADD TO ALBUM(S) ##
             # see https://docs.python.org/3/library/xml.etree.elementtree.html
             photoid = rsp[0].text
-            # print("PhotoID: " + photoid)
 
             for id in albums:
                 flickr.photosets_addPhoto(photoset_id=id, photo_id=photoid)
@@ -187,7 +189,8 @@ def upload(flickr, rfilename, album_ids):
             # ## CLEAN UP ##
             ElementTree.dump(rsp)
 
-            os.remove("image_name.jpg")
+            if "https://drive.google.com/open?" in image_loc:
+                os.remove(image_name)
 
 
 if __name__ == "__main__":
@@ -200,16 +203,6 @@ if __name__ == "__main__":
 
     flickrapi.set_log_level(logging.DEBUG)
     parser = ArgumentParser(description="Script to upload an image to Flickr.")
-    """
-    parser.add_argument('filename', nargs='?', default=None,
-                        help='filename of image to upload')
-    parser.add_argument('-p', '--public', action='store_true',
-                        help='make uploaded image public')
-    parser.add_argument('-fa', '--family', action='store_true',
-                        help='make uploaded image visible to your familgy')
-    parser.add_argument('-fr', '--friend', action='store_true',
-                        help='make uploaded image visible to your friend')
-    """
     parser.add_argument(
         "-s",
         "--client_secret",
@@ -217,7 +210,6 @@ if __name__ == "__main__":
         help="specify Client_Secret JSON file, which stores \
                         API key and secret. default: client_secret.json",
     )
-
     parser.add_argument(
         "-r",
         "--responses_filename",

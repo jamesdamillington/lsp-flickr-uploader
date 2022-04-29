@@ -7,18 +7,18 @@ See the [repo licence](LICENSE). This script builds on code from [akige](https:/
 ## Preparation
 ### Flickr Authorisation
 1. Visit [The Flickr Developer Guide: API](https://www.flickr.com/services/developer/api/), and request your API key and secret.
-1. Create a client `.json` file (default filename `client_secret.json`) with the following name/value pairs:
+2. Create a client `.json` file (default filename `client_secret.json`) with the following name/value pairs:
   1. `"key": "YOUR_KEY"` - replace `YOUR_KEY` with your API key from step 1.  
-  1. `"secret": "YOUR_SECRET"` - replace  `YOUR_SECRET` with your secret value from step 1.
-1. Run the python script without arguments, and perform Authentication & Authorization.
+  2. `"secret": "YOUR_SECRET"` - replace  `YOUR_SECRET` with your secret value from step 1.
+3. Run the python script without arguments, and perform Authentication & Authorization.
     1. This scripts shows URL for authorization process.
-    1. Visit the site and confirm authorization required for this script.
-    1. Copy the *Verification Code* shown by Flickr and input it to the code.
+    2. Visit the site and confirm authorization required for this script.
+    3. Copy the *Verification Code* shown by Flickr and input it to the code.
 
 ### Metadata
 1. Add the following to your client `.json` file:
   1. `"album_ids":{"ALBUM_1": 111111,"ALBUM_2": 222222}` - replace `ALBUM_1`, `ALBUM_2` etc. with the names of albums corresponding to the corresponding [photoset](https://www.flickr.com/help/forum/en-us/72157675237678471/) numbers (replace  `111111` and `222222` with your photoset numbers)
-  1. `"responses": "YOUR_FILE.csv"` - (optional) provide the name of the .`csv` file containing the metadata for the images to be uploaded (this is not needed if the filename is provided as an argument with `-f` tag when the script is run - see below)
+  2. `"responses": "YOUR_FILE.csv"` - (optional) provide the name of the .`csv` file containing the metadata for the images to be uploaded (this is not needed if the filename is provided as an argument with `-f` tag when the script is run - see below)
 1. Create a `.csv` (comma separated values) file with the following columns (with headers on first line):
   1. _Timestamp or imageID_ [numeric]- this column is not read but must exist
   2. _Name_ [text]- the name of the author of the image (will appear in the credit for the image)

@@ -61,7 +61,7 @@ This will use information in `client_secret.json` and requires that an appropria
 
 To run when no value is provided for the `"responses":` key, use
 ```
-python lsp-flickr-uploader.py -f "YOUR_FILE.csv"
+python lsp-flickr-uploader.py -r "YOUR_FILE.csv"
 ```
 where `"YOUR_FILE.csv"` is the path/name of the `.csv` containing your image information.
 

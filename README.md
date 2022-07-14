@@ -1,5 +1,5 @@
 # Upload images with metadata to Flickr
-Python script to upload images and associated metadata (title, description, tags, albums, etc.) to a Flickr account. It works for [ialeUK's Flickr account](https://www.flickr.com/images/96878059@N06/) - the landscape ecology image library - but should be adaptable for use with other accounts.
+Python script to upload images and associated metadata (title, description, tags, albums, etc.) to a Flickr account. It works for [ialeUK's Flickr account](https://www.flickr.com/photos/96878059@N06/) - the landscape ecology image library - but should be adaptable for use with other accounts.
 
 ## Credits
 See the [repo licence](LICENSE). This script builds on code from [akige](https://github.com/aikige)'s [flickr-uploader](https://github.com/aikige/flickr-uploader) script. The script utilizes the [FlickrAPI](https://github.com/sybrenstuvel/flickrapi/) (and see [requirements.txt](requirements.txt)). See comments in code for other minor acknowledgements.

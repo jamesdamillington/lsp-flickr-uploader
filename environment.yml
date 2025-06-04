@@ -23,6 +23,7 @@ dependencies:
   - wheel=0.37.1=pyhd3eb1b0_0
   - xz=5.2.5=h7b6447c_0
   - zlib=1.2.11=h7f8727e_4
+  - pip=22.0.4
   - pip:
     - argon2-cffi==21.3.0
     - argon2-cffi-bindings==21.2.0
